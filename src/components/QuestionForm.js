@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 function QuestionForm(props) {
+
+  //form is already ste up as a controlled form, newdata already defined
   const [formData, setFormData] = useState({
     prompt: "",
-    answer1: "",
-    answer2: "",
-    answer3: "",
-    answer4: "",
+    answers: [],
     correctIndex: 0,
   });
+
 
   function handleChange(event) {
     setFormData({
@@ -19,7 +19,17 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    fetch("http://localhost:4000/questions",{
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+    },
+    //body should be the new form data, which was already controlled
+    body: JSON.stringify(formData),
+  })
+    .then((r) => r.json())
+    //set state to the response data which is already capteure with state
+    .then((newQuestion) => setFormData(newQuestion))
   }
 
   return (
